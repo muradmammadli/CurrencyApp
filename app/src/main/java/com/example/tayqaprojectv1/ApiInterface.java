@@ -4,8 +4,9 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 public interface ApiInterface {
-    @GET("/rates.php?base=USD")
-    Call<List<rates>> getRates();
+    @GET("rates.php")
+    Call<List<rates>> getRates(@Query("base") String base);
 }

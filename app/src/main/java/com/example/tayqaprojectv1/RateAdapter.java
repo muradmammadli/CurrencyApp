@@ -1,10 +1,15 @@
 package com.example.tayqaprojectv1;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,9 +36,15 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.viewHolder> {
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
         rates rate = ratesList.get(position);
-
         holder.code.setText(rate.getCode());
-        holder.rate.setText(Double.toString(rate.getRate()));
+
+        Intent intent = ((Activity)context).getIntent();
+        int ratioValue = intent.getIntExtra("ratio",1);
+        Log.e("ex",Integer.toString(ratioValue));
+
+        Double rateValue = rate.getRate();
+        Double sumValue = ratioValue * rateValue;
+        holder.rate.setText(Double.toString(sumValue));
     }
 
     @Override
@@ -53,6 +64,7 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.viewHolder> {
             super(itemView);
             code = itemView.findViewById(R.id.code);
             rate = itemView.findViewById(R.id.rate);
+
         }
     }
 }

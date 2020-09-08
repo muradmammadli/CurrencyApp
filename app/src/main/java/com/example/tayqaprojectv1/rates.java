@@ -3,6 +3,8 @@ package com.example.tayqaprojectv1;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.text.DecimalFormat;
+
 public class rates {
 
     @SerializedName("code")
@@ -70,7 +72,7 @@ public class rates {
     }
 
     public Double getRate() {
-        return rate;
+        return Double.valueOf(new DecimalFormat("#.##").format(rate));
     }
 
     public void setRate(Double rate) {
