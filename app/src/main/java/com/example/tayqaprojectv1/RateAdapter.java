@@ -8,10 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -20,6 +22,15 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.viewHolder> {
 
     private Context context;
     private List<rates> ratesList;
+    private onItemClickListener mListener;
+
+    public interface onItemClickListener{
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(onItemClickListener listener){
+        mListener = listener;
+    }
 
     public RateAdapter(Context context, List<rates> ratesList) {
         this.context = context;
@@ -30,21 +41,26 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.viewHolder> {
     @Override
     public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.card_view, parent, false);
-        return new viewHolder(view);
+        return new viewHolder(view,mListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
-        rates rate = ratesList.get(position);
+        final rates rate = ratesList.get(position);
         holder.code.setText(rate.getCode());
 
         Intent intent = ((Activity)context).getIntent();
         int ratioValue = intent.getIntExtra("ratio",1);
-        Log.e("ex",Integer.toString(ratioValue));
-
         Double rateValue = rate.getRate();
         Double sumValue = ratioValue * rateValue;
         holder.rate.setText(Double.toString(sumValue));
+
+//        holder.cardView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(context, rate.getCode(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     @Override
@@ -57,14 +73,29 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.viewHolder> {
         notifyDataSetChanged();
     }
 
-    public class viewHolder extends RecyclerView.ViewHolder {
+    public static class viewHolder extends RecyclerView.ViewHolder {
         private TextView code, rate;
+        private CardView cardView;
 
-        public viewHolder(@NonNull View itemView) {
+        public viewHolder(@NonNull View itemView, final onItemClickListener listener) {
             super(itemView);
             code = itemView.findViewById(R.id.code);
             rate = itemView.findViewById(R.id.rate);
+            cardView = itemView.findViewById(R.id.card);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null){
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION){
+                            listener.onItemClick(position);
+                        }
+
+                    }
+
+                }
+            });
         }
     }
 }

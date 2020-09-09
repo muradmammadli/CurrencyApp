@@ -94,4 +94,8 @@ public class rates {
     public void setInverseRate(Double inverseRate) {
         this.inverseRate = inverseRate;
     }
+
+    public void changeText(String text){
+        code = text;
+    }
 }

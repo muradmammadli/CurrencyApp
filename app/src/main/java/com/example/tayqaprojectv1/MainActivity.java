@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private ApiInterface apiInterface;
     public List<rates> ratesList;
     private RateAdapter adapter;
+    String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +48,7 @@ public class MainActivity extends AppCompatActivity {
                     Intent intent = new Intent(MainActivity.this, MainActivity.class);
                     intent.putExtra("ratio", ratio);
                     startActivity(intent);
-//                    baseRate.setHint(baseRate.getText().toString());
                 }
-
                 return false;
             }
         });
@@ -59,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         adapter = new RateAdapter(this, new ArrayList<rates>());
         rv.setAdapter(adapter);
         apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        Call<List<rates>> call = apiInterface.getRates("USD");
+        Call<List<rates>> call = apiInterface.getRates("AZN");
         call.enqueue(new Callback<List<rates>>() {
             @Override
             public void onResponse(Call<List<rates>> call, Response<List<rates>> response) {
@@ -74,6 +73,16 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+
+        adapter.setOnItemClickListener(new RateAdapter.onItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+               name = ratesList.get(position).getCode();
+                Toast.makeText(MainActivity.this, name, Toast.LENGTH_SHORT).show();
+                
+            }
+        });
+
 
     }
 }
