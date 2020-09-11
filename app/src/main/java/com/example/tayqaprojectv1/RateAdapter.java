@@ -24,11 +24,11 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.viewHolder> {
     private List<rates> ratesList;
     private onItemClickListener mListener;
 
-    public interface onItemClickListener{
+    public interface onItemClickListener {
         void onItemClick(int position);
     }
 
-    public void setOnItemClickListener(onItemClickListener listener){
+    public void setOnItemClickListener(onItemClickListener listener) {
         mListener = listener;
     }
 
@@ -41,26 +41,19 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.viewHolder> {
     @Override
     public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.card_view, parent, false);
-        return new viewHolder(view,mListener);
+        return new viewHolder(view, mListener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
-        final rates rate = ratesList.get(position);
+        rates rate = ratesList.get(position);
         holder.code.setText(rate.getCode());
 
-        Intent intent = ((Activity)context).getIntent();
-        int ratioValue = intent.getIntExtra("ratio",1);
+        Intent intent = ((Activity) context).getIntent();
+        int ratioValue = intent.getIntExtra("ratio", 1);
         Double rateValue = rate.getRate();
         Double sumValue = ratioValue * rateValue;
         holder.rate.setText(Double.toString(sumValue));
-
-//        holder.cardView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(context, rate.getCode(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
     }
 
     @Override
@@ -86,9 +79,9 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.viewHolder> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (listener != null){
+                    if (listener != null) {
                         int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION){
+                        if (position != RecyclerView.NO_POSITION) {
                             listener.onItemClick(position);
                         }
 

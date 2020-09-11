@@ -29,21 +29,31 @@ public class MainActivity extends AppCompatActivity {
     private ApiInterface apiInterface;
     public List<rates> ratesList;
     private RateAdapter adapter;
-    String name;
+    static final String baseCurrency = "USD";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        baseCode = findViewById(R.id.baseCode);
-        baseRate = findViewById(R.id.baseRate);
-        rv = findViewById(R.id.recyclerView);
+        bindViews();
+        rv.setLayoutManager(new LinearLayoutManager(this));
+        rv.setHasFixedSize(true);
+        adapter = new RateAdapter(this, new ArrayList<rates>());
+        rv.setAdapter(adapter);
+        getRatesList(baseCurrency);
+
+        adapter.setOnItemClickListener(new RateAdapter.onItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                String name = ratesList.get(position).getCode();
+                getRatesList(name);
+            }
+        });
 
         baseRate.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-
                     int ratio = Integer.parseInt(baseRate.getText().toString());
                     Intent intent = new Intent(MainActivity.this, MainActivity.class);
                     intent.putExtra("ratio", ratio);
@@ -52,13 +62,12 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
 
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setHasFixedSize(true);
-        adapter = new RateAdapter(this, new ArrayList<rates>());
-        rv.setAdapter(adapter);
+    public void getRatesList(String name) {
         apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        Call<List<rates>> call = apiInterface.getRates("AZN");
+        baseCode.setText(name);
+        Call<List<rates>> call = apiInterface.getRates(name);
         call.enqueue(new Callback<List<rates>>() {
             @Override
             public void onResponse(Call<List<rates>> call, Response<List<rates>> response) {
@@ -73,16 +82,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+    }
 
-        adapter.setOnItemClickListener(new RateAdapter.onItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-               name = ratesList.get(position).getCode();
-                Toast.makeText(MainActivity.this, name, Toast.LENGTH_SHORT).show();
-                
-            }
-        });
-
-
+    private void bindViews() {
+        baseCode = findViewById(R.id.baseCode);
+        baseRate = findViewById(R.id.baseRate);
+        rv = findViewById(R.id.recyclerView);
     }
 }

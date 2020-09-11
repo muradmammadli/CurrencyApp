@@ -72,7 +72,7 @@ public class rates {
     }
 
     public Double getRate() {
-        return Double.valueOf(new DecimalFormat("#.##").format(rate));
+        return Math.floor(rate * 100) / 100;
     }
 
     public void setRate(Double rate) {
@@ -95,7 +95,7 @@ public class rates {
         this.inverseRate = inverseRate;
     }
 
-    public void changeText(String text){
+    public void changeText(String text) {
         code = text;
     }
 }
