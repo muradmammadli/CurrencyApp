@@ -46,14 +46,15 @@ public class RateAdapter extends RecyclerView.Adapter<RateAdapter.viewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
-        rates rate = ratesList.get(position);
+        final rates rate = ratesList.get(position);
         holder.code.setText(rate.getCode());
 
-        Intent intent = ((Activity) context).getIntent();
+        final Intent intent = ((Activity) context).getIntent();
         int ratioValue = intent.getIntExtra("ratio", 1);
         Double rateValue = rate.getRate();
         Double sumValue = ratioValue * rateValue;
         holder.rate.setText(Double.toString(sumValue));
+
     }
 
     @Override

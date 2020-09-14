@@ -9,7 +9,7 @@ public class rates {
 
     @SerializedName("code")
     @Expose
-    private String code;
+    private String code = "USD";
     @SerializedName("alphaCode")
     @Expose
     private String alphaCode;
